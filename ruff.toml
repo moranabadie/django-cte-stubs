@@ -1,0 +1,8 @@
+# Enable flake8-bugbear (`B`) rules.
+select = ["ALL"]
+ignore = [
+      "D211",
+      "D212",
+]
+
+target-version = "py39"
