@@ -3,6 +3,21 @@ select = ["ALL"]
 ignore = [
       "D211",
       "D212",
+      "ANN101",
+      "ANN102",
 ]
-
+line-length = 124
 target-version = "py39"
+
+[per-file-ignores]
+"**/migrations/*.py" = [
+      "RUF012",
+      "D101",
+]
+"**/manage.py" = [
+      "INP001",
+]
+"**/*.pyi" = [
+      "FBT001",
+      "PLR0913",
+]

@@ -1,0 +1,1 @@
+"""The django settings."""

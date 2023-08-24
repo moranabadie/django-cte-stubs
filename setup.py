@@ -8,11 +8,11 @@ that provides support for Common Table Expressions (CTE).
 """
 from pathlib import Path
 
-from setuptools import find_packages, setup
+from setuptools import find_packages, setup  # type: ignore[import]
 
 
 def _find_stub_files() -> list[str]:
-    stubs_path = Path("django_cte_stubs")
+    stubs_path = Path("django_cte-stubs")
     return [f.relative_to(stubs_path).as_posix() for f in stubs_path.rglob("*.pyi")]
 
 
@@ -38,9 +38,9 @@ setup(
     py_modules=[],
     python_requires=">=3.9",
     install_requires=dependencies,
-    packages=["django-cte-stubs", *find_packages(exclude=["scripts"])],
+    packages=["django_cte-stubs", *find_packages(exclude=["tests"])],
     package_data={
-        "django-cte-stubs": _find_stub_files(),
+        "django_cte-stubs": _find_stub_files(),
     },
     classifiers=[
         "License :: OSI Approved :: BSD License",
