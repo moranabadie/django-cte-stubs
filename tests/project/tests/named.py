@@ -17,14 +17,12 @@ from myapp.models import Order, Region  # noqa: E402
 
 
 class RegionInfo(TypedDict):
-
     """Annotation of a region."""
 
     name: str
 
 
 class RegionCounts(TypedDict):
-
     """Annotation of a region."""
 
     orders_count: int

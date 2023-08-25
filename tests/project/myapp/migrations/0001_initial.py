@@ -21,16 +21,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name="Order",
-            fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("amount", models.IntegerField()),
-            ],
-            managers=[
-                ("large", django.db.models.manager.Manager()),
-            ],
-        ),
-        migrations.CreateModel(
             name="Region",
             fields=[
                 ("name", models.TextField(primary_key=True, serialize=False)),
@@ -41,11 +31,25 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name="Order",
+            fields=[
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("amount", models.IntegerField()),
+                ("region", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="myapp.region")),
+            ],
+            managers=[
+                ("large", django.db.models.manager.Manager()),
+            ],
+            options={
+                "db_table": "orders",
+            },
+        ),
+        migrations.CreateModel(
             name="Book",
             fields=[
                 ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 ("title", models.CharField(max_length=100)),
-                ("published_date", models.DateField()),
+                ("published_date", models.DateField(auto_now_add=True)),
                 ("nb_line", models.IntegerField(default=1)),
                 ("author", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="myapp.author")),
             ],

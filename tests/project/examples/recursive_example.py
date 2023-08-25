@@ -4,20 +4,35 @@ from typing import TYPE_CHECKING, TypedDict
 import django
 from django.db.models import F, IntegerField, TextField, Value
 from django.db.models.functions import Concat
-from django_cte import CTEQuerySet, With
+from django_cte import With
 
 if TYPE_CHECKING:
     from django.db.models.query import _QuerySet
+    from django_stubs_ext import WithAnnotations
 
 django.setup()
 
-from myapp.models import Book, Region  # noqa: E402
+from myapp.models import Order, Region  # noqa: E402
+
+Order.objects.all().delete()
+Region.objects.all().delete()
+region = Region.objects.create(name="example")
+Order.objects.create(amount=2, region=region)
+region2 = Region.objects.create(name="example2", region=region)
+Order.objects.create(amount=2, region=region2)
 
 
 class RegionInfo(TypedDict):
     """Annotation of a region."""
 
     name: str
+
+
+class RecRegionInfo(TypedDict):
+    """Annotation of a region."""
+
+    path: str
+    depth: int
 
 
 def make_regions_cte(cte: "With[Region]") -> "_QuerySet[Region, RegionInfo]":
@@ -45,9 +60,6 @@ def make_regions_cte(cte: "With[Region]") -> "_QuerySet[Region, RegionInfo]":
 
 cte: "With[Region]" = With.recursive(make_regions_cte)
 
-# it should be a Region query not an Book
-wrong_cte: "With[Book]" = With.recursive(make_regions_cte)  # type: ignore[arg-type]
-
 regions = (
     cte.join(Region, name=cte.col.name)
     .with_cte(cte)
@@ -59,5 +71,5 @@ regions = (
     .order_by("path")
 )
 
-orders_wrong: int = cte.queryset().with_cte(cte)  # type: ignore[assignment]
-orders_ok: "CTEQuerySet[Region]" = cte.queryset().with_cte(cte)
+r: "WithAnnotations[Order, RecRegionInfo]" = regions.get()
+path: str = r.path

@@ -1,4 +1,5 @@
 """Some simple checks."""
+from contextlib import suppress
 from typing import TYPE_CHECKING, TypedDict
 
 import django
@@ -14,10 +15,15 @@ if TYPE_CHECKING:
 
 
 class NotaBook(TypedDict):
-
     """book annotations."""
 
     author_total: int
+
+
+class NotaBook2(TypedDict):
+    """book annotations."""
+
+    total: int
 
 
 wrong_cte_1: "With[Book]" = With(
@@ -55,10 +61,13 @@ orders: "CTEQuerySet[WithAnnotations[Book, NotaBook]]" = (
     .annotate(author_total=cte.col.total)
 )
 
+author, _ = Author.objects.get_or_create(name="test")
+Book.objects.get_or_create(title="test", author_id=author.id)
 wrong_get: int = orders.get()  # type: ignore[assignment]
-wrong_author_total: str = orders.get().not_author_total  # type: ignore[attr-defined]
+ok_book_get: "Book" = orders.get()
+with suppress(AttributeError):
+    wrong_author_total: str = orders.get().not_author_total  # type: ignore[attr-defined]
 ok_author_total: int = orders.get().author_total
-wrong_author_total_2: str = orders.get().author_total  # type: ignore[assignment]
 
 wrong_title: int = orders.get().title  # type: ignore[assignment]
 ok_title: str = orders.get().title

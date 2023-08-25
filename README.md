@@ -19,18 +19,24 @@ To get started with `django-cte-stubs`, simply install the package via pip:
 pip install django-cte-stubs
 ```
 
-Once installed, setup https://github.com/typeddjango/django-stubs if not already.
+Once installed, setup https://github.com/typeddjango/django-stubs if not already, and add `mypy_django_cte_plugin` :
+
+```
+plugins =
+    mypy_django_plugin.main,
+    mypy_django_cte_plugin.main,
+```
 
 
 ## Typing Examples
 
 We have provided a few examples of how typing is implemented using these stubs. Explore the following modules in our test suite for more insights:
 
-- [cte_example.py](./tests/project/tests/cte_example.py) simple CTE typing
-- [as_manager.py](./tests/project/tests/as_manager.py) with as_manager()
-- [named.py](./tests/project/tests/named.py)  with named CTE objects
-- [raw.py](./tests/project/tests/raw.py) With raw sql code
-- [recursinve_example.py](./tests/project/tests/recursive_example.py) With a recursive CTE.
+- [simple.py](./tests/project/examples/simple.py) simple CTE typing
+- [simple_typed.py](./tests/project/examples/simple_typed.py) simple CTE with strong typing
+- [as_manager.py](./tests/project/examples/as_manager.py) with as_manager()
+- [raw.py](./tests/project/examples/raw.py) With raw sql code
+- [recursive_example.py](./tests/project/tests/recursive_example.py) With a recursive CTE.
 
 ## Feedback & Contributions
 

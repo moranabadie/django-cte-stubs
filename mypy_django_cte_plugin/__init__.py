@@ -1,0 +1,1 @@
+"""The mypy plugin."""

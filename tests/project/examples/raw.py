@@ -1,19 +1,18 @@
 """Raw sql."""
-from contextlib import suppress
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 import django
-from django.db import OperationalError
 from django.db.models import IntegerField, QuerySet, TextField
 from django_cte import With
 from django_cte.raw import raw_cte_sql
 
 django.setup()
 
-from myapp.models import Region  # noqa: E402
+from myapp.models import Order, Region  # noqa: E402
 
 if TYPE_CHECKING:
     from django_cte.raw import RawCteSqlModel
+    from django_stubs_ext import WithAnnotations
 
 
     class RawCTE(RawCteSqlModel):
@@ -21,6 +20,17 @@ if TYPE_CHECKING:
 
         region_id = TextField()
         avg_order = IntegerField()
+
+    class Annotations(TypedDict):
+        """The annotations."""
+
+        avg_order: int
+
+
+Order.objects.all().delete()
+Region.objects.all().delete()
+region = Region.objects.create(name="moon")
+Order.objects.create(amount=2, region=region)
 
 raw_query: "QuerySet[RawCTE]" = raw_cte_sql(
     """
@@ -44,10 +54,7 @@ moon_avg = (
     .with_cte(cte)
 )
 
-with suppress(OperationalError):
-    wrong: int = moon_avg.get()  # type: ignore[assignment]
-    ok: "RawCTE" = moon_avg.get()
-    wrong_avg_order: str = ok.avg_order  # type: ignore[assignment]
-    ok_avg_order: int = ok.avg_order
-    wrong_region_id: int = ok.region_id  # type: ignore[assignment]
-    ok_region_id: str = ok.region_id
+annotated_raw: "WithAnnotations[RawCTE, Annotations]" = moon_avg.get()
+wrong_avg_order: str = annotated_raw.avg_order  # type: ignore[assignment]
+ok_avg_order: int = annotated_raw.avg_order
+

@@ -24,7 +24,7 @@ dependencies = [
 
 setup(
     name="django-cte-stubs",
-    version="0.1.0",
+    version="0.2.0",
     description="Mypy stubs for Django CTE",
     long_description=Path("README.md").read_text(),
     long_description_content_type="text/markdown",
@@ -38,7 +38,9 @@ setup(
     py_modules=[],
     python_requires=">=3.9",
     install_requires=dependencies,
-    packages=["django_cte-stubs", *find_packages(exclude=["tests"])],
+    packages=[
+        "django_cte-stubs", *find_packages(exclude=["tests"]),
+    ],
     package_data={
         "django_cte-stubs": _find_stub_files(),
     },

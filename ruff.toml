@@ -1,7 +1,7 @@
 # Enable flake8-bugbear (`B`) rules.
 select = ["ALL"]
 ignore = [
-      "D211",
+      "D203",
       "D212",
       "ANN101",
       "ANN102",
@@ -20,4 +20,7 @@ target-version = "py39"
 "**/*.pyi" = [
       "FBT001",
       "PLR0913",
+]
+"**/examples/*.py" = [
+      "S101",
 ]
