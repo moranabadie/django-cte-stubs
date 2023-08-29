@@ -24,7 +24,7 @@ dependencies = [
 
 setup(
     name="django-cte-stubs",
-    version="0.2.0",
+    version="0.2.1",
     description="Mypy stubs for Django CTE",
     long_description=Path("README.md").read_text(),
     long_description_content_type="text/markdown",

@@ -1,4 +1,4 @@
-from typing import Callable, Generic, TypeVar
+from typing import Callable, Generic, Literal, TypeVar
 
 from django.db.models import Manager, Model, Q
 from django.db.models.query import QuerySet, _QuerySet
@@ -46,7 +46,7 @@ class ManagedWith(With[_T_co], Generic[_T_co, _Q_co]):
                   materialized: bool = ...) -> ManagedWith[_T2_co, _Q2_co]: ...
 
     def join(self, model_or_queryset: _Q_co | type[Model], *filter_q: Q,  # type: ignore[override]
-             **filter_kw: CTEColumn) -> ManagedCTEQuerySet[_T_co, _Q_co]: ...
+             **filter_kw: CTEColumn | Literal["INNER JOIN", "LEFT OUTER JOIN"]) -> ManagedCTEQuerySet[_T_co, _Q_co]: ...
 
     def queryset(self) -> ManagedCTEQuerySet[_T_co, _Q_co]: ...
 
