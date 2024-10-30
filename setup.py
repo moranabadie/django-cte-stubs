@@ -8,7 +8,7 @@ that provides support for Common Table Expressions (CTE).
 """
 from pathlib import Path
 
-from setuptools import find_packages, setup  # type: ignore[import]
+from setuptools import find_packages, setup  # type: ignore[import-not-found]
 
 
 def _find_stub_files() -> list[str]:
