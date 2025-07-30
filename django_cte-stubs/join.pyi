@@ -14,21 +14,21 @@ class QJoin:
     join_type: Literal["INNER JOIN", "LEFT OUTER JOIN"]
     nullable: bool
 
-    def __init__(self, parent_alias: str, table_name: str, table_alias: str,
-                 on_clause: WhereNode, join_type: Literal["INNER JOIN", "LEFT OUTER JOIN"] = ...,
-                 nullable: bool | None = ...) -> None: ...
-
+    def __init__(
+        self,
+        parent_alias: str,
+        table_name: str,
+        table_alias: str,
+        on_clause: WhereNode,
+        join_type: Literal["INNER JOIN", "LEFT OUTER JOIN"] = ...,
+        nullable: bool | None = ...,
+    ) -> None: ...
     @property
     def identity(self) -> type[QJoin]: ...
-
     def __hash__(self) -> int: ...
-
     def __eq__(self, other: object) -> bool: ...
-
     def equals(self, other: object) -> bool: ...
-
     def as_sql(self, compiler: SQLCompiler, connection: BaseDatabaseWrapper) -> _AsSqlType: ...
-
     def relabeled_clone(self, change_map: dict[str | None, str]) -> Self: ...
 
     class join_field:  # noqa: N801

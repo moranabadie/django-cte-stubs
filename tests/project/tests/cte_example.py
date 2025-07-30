@@ -1,4 +1,5 @@
 """Some simple checks."""
+
 from contextlib import suppress
 from typing import TYPE_CHECKING, TypedDict
 
@@ -35,14 +36,11 @@ good_cte_1: "With[Book]" = With(
 )
 
 good_cte_2: "With[Book]" = With(
-    Book.objects
-    .values("author_id"),
+    Book.objects.values("author_id"),
 )
 
 cte: "With[Book]" = With(
-    Book.objects
-    .values("author_id")
-    .annotate(total=Sum("nb_line")),
+    Book.objects.values("author_id").annotate(total=Sum("nb_line")),
 )
 
 wrong_cte: int = cte  # type: ignore[assignment]  # it should fail, wrong type
@@ -53,10 +51,8 @@ bad_queryset: CTEQuerySet[Author] = cte.queryset()  # type: ignore[assignment]  
 orders: "CTEQuerySet[WithAnnotations[Book, NotaBook]]" = (
     # FROM orders INNER JOIN cte ON orders.region_id = cte.region_id
     cte.join(Book, author=cte.col.author_id)
-
     # Add `WITH ...` before `SELECT ... FROM orders ...`
     .with_cte(cte)
-
     # Annotate each Order with a "region_total"
     .annotate(author_total=cte.col.total)
 )

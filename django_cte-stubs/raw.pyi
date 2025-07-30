@@ -1,12 +1,10 @@
-from typing import TypeVar
+from collections.abc import Mapping, Sequence
+from typing import Any, TypeVar
 
-from django.db.models import Field, Model
-from django.db.models.query import QuerySet
+from django.db.models import Field, Model, QuerySet
 
 class RawCteSqlModel(Model): ...
 
-
 _T_RawCteSqlModel = TypeVar("_T_RawCteSqlModel", bound=RawCteSqlModel)
 
-# it is not really true, but we are faking a Queryset.
-def raw_cte_sql(sql: str, params: list[str], refs: dict[str, Field]) -> QuerySet[_T_RawCteSqlModel]: ...
+def raw_cte_sql(sql: str, params: Sequence[Any], refs: Mapping[str, Field]) -> QuerySet[_T_RawCteSqlModel]: ...
