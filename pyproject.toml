@@ -105,3 +105,7 @@ plugins = [
 [tool.django-stubs]
 django_settings_module = "project.settings"
 
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple/"
+default = true
