@@ -1,4 +1,5 @@
 """Tests named CTEs."""
+
 from contextlib import suppress
 from typing import TYPE_CHECKING, TypedDict
 
@@ -31,17 +32,21 @@ class RegionCounts(TypedDict):
 
 def make_root_mapping(rootmap: "With[Region]") -> "_QuerySet[Region, RegionInfo]":
     """Create the recursion CTE."""
-    return Region.objects.filter(
-        parent__isnull=True,
-    ).values(
-        "name",
-        root=F("name"),
-    ).union(
-        rootmap.join(Region, parent=rootmap.col.name).values(
+    return (
+        Region.objects.filter(
+            parent__isnull=True,
+        )
+        .values(
             "name",
-            root=rootmap.col.root,
-        ),
-        all=True,
+            root=F("name"),
+        )
+        .union(
+            rootmap.join(Region, parent=rootmap.col.name).values(
+                "name",
+                root=rootmap.col.root,
+            ),
+            all=True,
+        )
     )
 
 
@@ -57,7 +62,8 @@ totals: "With[WithAnnotations[Region, RegionCounts]]" = With(
     rootmap.join(Order, region_id=rootmap.col.name)
     .values(
         root=rootmap.col.root,
-    ).annotate(
+    )
+    .annotate(
         orders_count=Count("id"),
         region_total=Sum("amount"),
     ),

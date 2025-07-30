@@ -1,4 +1,5 @@
 """An example with recursion."""
+
 from typing import TYPE_CHECKING, TypedDict
 
 import django
@@ -23,23 +24,29 @@ class RegionInfo(TypedDict):
 def make_regions_cte(cte: "With[Region]") -> "_QuerySet[Region, RegionInfo]":
     """Set the recursion."""
     # non-recursive: get root nodes
-    return Region.objects.filter(
-        parent__isnull=True,
-    ).values(
-        "name",
-        path=F("name"),
-        depth=Value(0, output_field=IntegerField()),
-    ).union(
-        # recursive union: get descendants
-        cte.join(Region, parent=cte.col.name).values(
+    return (
+        Region.objects.filter(
+            parent__isnull=True,
+        )
+        .values(
             "name",
-            path=Concat(
-                cte.col.path, Value(" / "), F("name"),
-                output_field=TextField(),
+            path=F("name"),
+            depth=Value(0, output_field=IntegerField()),
+        )
+        .union(
+            # recursive union: get descendants
+            cte.join(Region, parent=cte.col.name).values(
+                "name",
+                path=Concat(
+                    cte.col.path,
+                    Value(" / "),
+                    F("name"),
+                    output_field=TextField(),
+                ),
+                depth=cte.col.depth + Value(1, output_field=IntegerField()),
             ),
-            depth=cte.col.depth + Value(1, output_field=IntegerField()),
-        ),
-        all=True,
+            all=True,
+        )
     )
 
 

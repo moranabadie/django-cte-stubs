@@ -1,25 +1,14 @@
 """An example with recursion."""
-from typing import TYPE_CHECKING, TypedDict
 
-import django
+from typing import TYPE_CHECKING, TypedDict, reveal_type
+
 from django.db.models import F, IntegerField, TextField, Value
 from django.db.models.functions import Concat
-from django_cte import With
+from django_cte.cte import CTE, with_cte
+from myapp.models import Region
 
 if TYPE_CHECKING:
     from django.db.models.query import _QuerySet
-    from django_stubs_ext import WithAnnotations
-
-django.setup()
-
-from myapp.models import Order, Region  # noqa: E402
-
-Order.objects.all().delete()
-Region.objects.all().delete()
-region = Region.objects.create(name="example")
-Order.objects.create(amount=2, region=region)
-region2 = Region.objects.create(name="example2", region=region)
-Order.objects.create(amount=2, region=region2)
 
 
 class RegionInfo(TypedDict):
@@ -28,48 +17,51 @@ class RegionInfo(TypedDict):
     name: str
 
 
-class RecRegionInfo(TypedDict):
-    """Annotation of a region."""
-
-    path: str
-    depth: int
-
-
-def make_regions_cte(cte: "With[Region]") -> "_QuerySet[Region, RegionInfo]":
-    """Set the recursion."""
-    # non-recursive: get root nodes
-    return Region.objects.filter(
-        parent__isnull=True,
-    ).values(
-        "name",
-        path=F("name"),
-        depth=Value(0, output_field=IntegerField()),
-    ).union(
-        # recursive union: get descendants
-        cte.join(Region, parent=cte.col.name).values(
+def make_regions_cte(cte: CTE[Region]) -> "_QuerySet[Region, RegionInfo]":
+    """Copy pasted from the documentation."""
+    return (
+        Region.objects.filter(parent__isnull=True)
+        .values(
             "name",
-            path=Concat(
-                cte.col.path, Value(" / "), F("name"),
-                output_field=TextField(),
+            path=F("name"),
+            depth=Value(0, output_field=IntegerField()),
+        )
+        .union(
+            # recursive union: get descendants
+            cte.join(Region, parent=cte.col.name).values(
+                "name",
+                path=Concat(
+                    cte.col.path,
+                    Value(" / "),
+                    F("name"),
+                    output_field=TextField(),
+                ),
+                depth=cte.col.depth + Value(1, output_field=IntegerField()),
             ),
-            depth=cte.col.depth + Value(1, output_field=IntegerField()),
-        ),
-        all=True,
+            all=True,
+        )
     )
 
 
-cte: "With[Region]" = With.recursive(make_regions_cte)
-
-regions = (
-    cte.join(Region, name=cte.col.name)
-    .with_cte(cte)
+cte = CTE.recursive(make_regions_cte)
+reveal_type(cte)
+regions = with_cte(
+    cte,
+    select=cte.join(Region, name=cte.col.name)
     .annotate(
         path=cte.col.path,
         depth=cte.col.depth,
     )
     .filter(depth=2)
-    .order_by("path")
+    .order_by("path"),
 )
+reveal_type(regions)
 
-r: "WithAnnotations[Order, RecRegionInfo]" = regions.get()
+r = regions.get()
 path: str = r.path
+reveal_type(path)
+
+depth: str = r.depth
+reveal_type(depth)
+
+assert r.not_depth  # type: ignore[attr-defined]

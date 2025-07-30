@@ -1,4 +1,5 @@
 """Test as manager.."""
+
 from __future__ import annotations
 
 from contextlib import suppress
@@ -32,8 +33,7 @@ wrong_first: int | None = Order.large.all().first()  # type: ignore[assignment]
 ok_first: Order | None = Order.large.all().first()
 
 cte: ManagedWith[Order, LargeOrdersQuerySet] = With(
-    Order.large
-    .values("amount"),
+    Order.large.values("amount"),
 )
 
 with suppress(Order.DoesNotExist):
@@ -44,8 +44,7 @@ wrong_with_cte_2: int = cte.queryset().with_cte(cte).example()  # type: ignore[a
 good_with_cte_2: LargeOrdersQuerySet = cte.queryset().with_cte(cte).example()
 
 cte2: With[Order] = With(
-    Order.large
-    .values("amount"),
+    Order.large.values("amount"),
 )
 wrong_cte2: int = cte2.queryset().with_cte(cte).get()  # type: ignore[assignment]
 Good_cte2: Order = cte2.queryset().with_cte(cte).get()

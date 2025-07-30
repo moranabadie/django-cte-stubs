@@ -1,38 +1,27 @@
 """Raw sql."""
-from typing import TYPE_CHECKING, TypedDict
 
-import django
+from typing import TypedDict
+
 from django.db.models import IntegerField, QuerySet, TextField
-from django_cte import With
-from django_cte.raw import raw_cte_sql
-
-django.setup()
-
-from myapp.models import Order, Region  # noqa: E402
-
-if TYPE_CHECKING:
-    from django_cte.raw import RawCteSqlModel
-    from django_stubs_ext import WithAnnotations
+from django_cte.cte import CTE, with_cte
+from django_cte.raw import RawCteSqlModel, raw_cte_sql
+from myapp.models import Region
 
 
-    class RawCTE(RawCteSqlModel):
-        """The Typed Raw."""
+class RawCTE(RawCteSqlModel):
+    """The Typed Raw."""
 
-        region_id = TextField()
-        avg_order = IntegerField()
-
-    class Annotations(TypedDict):
-        """The annotations."""
-
-        avg_order: int
+    region_id = TextField()
+    avg_order = IntegerField()
 
 
-Order.objects.all().delete()
-Region.objects.all().delete()
-region = Region.objects.create(name="moon")
-Order.objects.create(amount=2, region=region)
+class Annotations(TypedDict):
+    """The annotations."""
 
-raw_query: "QuerySet[RawCTE]" = raw_cte_sql(
+    avg_order: int
+
+
+cte_sql: QuerySet[RawCTE] = raw_cte_sql(
     """
     SELECT region_id, AVG(amount) AS avg_order
     FROM orders
@@ -46,15 +35,16 @@ raw_query: "QuerySet[RawCTE]" = raw_cte_sql(
     },
 )
 
-cte: "With[RawCTE]" = With(raw_query)
-moon_avg = (
-    cte
-    .join(Region, name=cte.col.region_id)
-    .annotate(avg_order=cte.col.avg_order)
-    .with_cte(cte)
-)
+reveal_type(cte_sql)  # noqa: F821
 
-annotated_raw: "WithAnnotations[RawCTE, Annotations]" = moon_avg.get()
+
+cte = CTE(cte_sql)
+moon_avg = with_cte(cte, select=cte.join(Region, name=cte.col.region_id).annotate(avg_order=cte.col.avg_order))
+
+
+annotated_raw = moon_avg.get()
+reveal_type(annotated_raw)  # noqa: F821
 wrong_avg_order: str = annotated_raw.avg_order  # type: ignore[assignment]
-ok_avg_order: int = annotated_raw.avg_order
 
+ok_avg_order: int = annotated_raw.avg_order
+reveal_type(ok_avg_order)  # noqa: F821

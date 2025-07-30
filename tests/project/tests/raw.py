@@ -1,4 +1,5 @@
 """Raw sql."""
+
 from contextlib import suppress
 from typing import TYPE_CHECKING
 
@@ -15,12 +16,12 @@ from myapp.models import Region  # noqa: E402
 if TYPE_CHECKING:
     from django_cte.raw import RawCteSqlModel
 
-
     class RawCTE(RawCteSqlModel):
         """The Typed Raw."""
 
         region_id = TextField()
         avg_order = IntegerField()
+
 
 raw_query: "QuerySet[RawCTE]" = raw_cte_sql(
     """
@@ -37,12 +38,7 @@ raw_query: "QuerySet[RawCTE]" = raw_cte_sql(
 )
 
 cte: "With[RawCTE]" = With(raw_query)
-moon_avg = (
-    cte
-    .join(Region, name=cte.col.region_id)
-    .annotate(avg_order=cte.col.avg_order)
-    .with_cte(cte)
-)
+moon_avg = cte.join(Region, name=cte.col.region_id).annotate(avg_order=cte.col.avg_order).with_cte(cte)
 
 with suppress(OperationalError):
     wrong: int = moon_avg.get()  # type: ignore[assignment]

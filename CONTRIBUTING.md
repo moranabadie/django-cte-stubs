@@ -11,11 +11,11 @@ To start developing for `django-cte-stubs`, you'll need to set up a local develo
 1. Fork the repository on GitHub.
 2. Clone your fork locally
 3. make sure you have a virtualenv with python >= 3.9 
-4. Install required dependencies (preferably in a virtual environment): `pip install -r tests/requirements.in`
+4. Install required dependencies (preferably in a virtual environment): `uv sync --all-groups`
 
 #### 2. Test your environment
 
-- run the linter : `ruff .`
+- run the linter : ` ruff format ; ruff check --fix`
 - run mypy : `PYTHONPATH=tests/project mypy .`
 
 ## Contribution Guidelines
@@ -31,7 +31,7 @@ To start developing for `django-cte-stubs`, you'll need to set up a local develo
 We aim to maintain a consistent coding style throughout the project. Here are a few key points:
 
 - Make sure dependencies in [requirements.in](tests%2Frequirements.in) are installed
-- Call `ruff .` or `ruff . --fix`
+- Call `ruff format ; ruff check` or `ruff format ; ruff check --fix`
 
 ### Testing
 

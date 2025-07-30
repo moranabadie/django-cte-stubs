@@ -1,0 +1,107 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-cte-stubs"
+version = "1.0.0"
+description = "Mypy stubs for Django CTE"
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["mypy", "stubs", "typing", "testing", "code analysis"]
+authors = [
+    { name = "Moran Abadie", email = "moran.abadie@gmail.com" }
+]
+maintainers = [
+    { name = "Moran Abadie", email = "moran.abadie@gmail.com" }
+]
+requires-python = ">=3.9"
+dependencies = [
+    "mypy==1.*",
+    "django-stubs==5.*",
+    "django-cte==2.*"
+]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+    "Framework :: Django",
+    "Framework :: Django :: 4.1",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "Development Status :: 4 - Beta",
+]
+
+[project.urls]
+Homepage = "https://github.com/moranabadie/django-cte-stubs"
+Release-notes = "https://github.com/moranabadie/django-cte-stubs/releases"
+
+[tool.hatch]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "django_cte-stubs/*.pyi",
+    "mypy_django_cte_plugin/.py",
+    "README.md",
+    "LICENSE.md"
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "django_cte-stubs/*.pyi",
+    "mypy_django_cte_plugin/.py",
+]
+
+[tool.ruff]
+lint.select = ["ALL"]
+lint.ignore = [
+    "D203",
+    "D212",
+    "ANN401",
+]
+line-length = 124
+target-version = "py39"
+
+[tool.ruff.lint.per-file-ignores]
+"**/migrations/*.py" = [
+    "RUF012",
+    "D101",
+]
+"**/manage.py" = [
+    "INP001",
+]
+"**/*.pyi" = [
+    "FBT001",
+    "PLR0913",
+]
+"**/examples/*.py" = [
+    "S101",
+]
+
+[tool.mypy]
+warn_unused_ignores = true
+strict_optional = true
+cache_dir = "/dev/null"
+incremental = true
+ignore_missing_imports = false
+check_untyped_defs = true
+warn_no_return = true
+warn_return_any = true
+no_implicit_optional = true
+disable_error_code = [
+    "import-untyped",
+]
+plugins = [
+    "mypy_django_plugin.main",
+]
+
+[tool.django-stubs]
+django_settings_module = "project.settings"
+

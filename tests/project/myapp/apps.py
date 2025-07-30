@@ -1,4 +1,5 @@
 """The dummy app."""
+
 from django.apps import AppConfig
 
 
