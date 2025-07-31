@@ -1,0 +1,3 @@
+tests/project/examples/join.py:9: note: Revealed type is "django_cte.cte.CTE[myapp.models.Order@AnnotatedWith[TypedDict({'total': Any})]]"
+tests/project/examples/join.py:14: note: Revealed type is "django_cte.cte.CTEQuerySet[myapp.models.Order@AnnotatedWith[TypedDict({'total': Any, 'region_total': Any})], myapp.models.Order@AnnotatedWith[TypedDict({'total': Any, 'region_total': Any})]]"
+tests/project/examples/join.py:17: note: Revealed type is "Any"

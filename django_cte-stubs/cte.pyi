@@ -1,4 +1,4 @@
-from typing import Any, Callable, Generic, TypeVar
+from typing import Any, Callable, Generic, Literal, TypeVar
 
 from django.db.models import Manager, Model
 from django.db.models.query import QuerySet, _QuerySet
@@ -6,7 +6,7 @@ from django.db.models.sql import Query
 from mypy.nodes import Expression
 from typing_extensions import Self
 
-from .meta import CTEColumn, CTEColumns
+from .meta import CTEColumns
 from .query import CTEQuery
 
 _T_co = TypeVar("_T_co", bound=Model, covariant=True)
@@ -35,8 +35,10 @@ class CTE(Generic[_T_co]):
     ) -> Self: ...
     def join(
         self,
-        *filter_q: type[_T2_co | _T_co] | _QuerySet[_T_co, _Row_co],
-        **filter_kw: CTEColumn,
+        model_or_queryset: _QuerySet[Model, _Row_co] | type[Model],
+        *filter_q: Any,
+        _join_type: Literal["INNER JOIN", "LEFT OUTER JOIN"] | None = ...,
+        **filter_kw: Any,
     ) -> CTEQuerySet[_T_co]: ...
     def queryset(self) -> CTEQuerySet[_T_co]: ...
     def _resolve_ref(self, name: str) -> Expression: ...

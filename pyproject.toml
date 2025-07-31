@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-cte-stubs"
-version = "1.0.0"
+version = "1.0.1"
 description = "Mypy stubs for Django CTE"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -83,6 +83,12 @@ target-version = "py39"
 ]
 "**/examples/*.py" = [
     "S101",
+    "D102",
+    "D101",
+    "D103",
+]
+"run_mypy_examples.py" = [
+    "T201",
 ]
 
 [tool.mypy]
