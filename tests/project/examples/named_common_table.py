@@ -13,7 +13,7 @@ class RootMapping(TypedDict):
     root: str
 
 
-def make_root_mapping(rootmap: CTE[Region]) -> QuerySet[Region, RootMapping]:
+def make_root_mapping(rootmap: CTE[QuerySet[Region, RootMapping]]) -> QuerySet[Region, RootMapping]:
     return (
         Region.objects.filter(parent__isnull=True)
         .values(

@@ -4,6 +4,8 @@ Example with a custom QuerySet using CTEs in Django.
 Thank you https://github.com/karolyi.
 """
 
+from __future__ import annotations
+
 from functools import cached_property
 
 from django.db.models import QuerySet
@@ -13,7 +15,7 @@ from typing_extensions import Self
 
 
 class CategoryQuerySet(QuerySet[Region]):
-    def _get_parents_cte(self, cte_in: CTE[Region]) -> Self:
+    def _get_parents_cte(self, cte_in: CTE[CategoryQuerySet]) -> Self:
         join_answer = cte_in.join(
             model_or_queryset=Region.objects.only("pk"),
             pk=cte_in.col.parent_id,
@@ -28,7 +30,9 @@ class CategoryQuerySet(QuerySet[Region]):
         cte = CTE.recursive(make_cte_queryset=self._get_parents_cte)
         reveal_type(cte)  # noqa: F821
 
-        _with_typing: CTE[Region] = CTE.recursive(make_cte_queryset=self._get_parents_cte)
+        _with_typing: CTE[CategoryQuerySet] = CTE.recursive(make_cte_queryset=self._get_parents_cte)
+
+        reveal_type(cte.join(model_or_queryset=Region, pk=cte.col.parent_id))  # noqa: F821
 
         categories = with_cte(cte, select=cte.join(model_or_queryset=Region, pk=cte.col.parent_id))
         reveal_type(categories)  # noqa: F821

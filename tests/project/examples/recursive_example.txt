@@ -1,4 +1,4 @@
-tests/project/examples/recursive_example.py:47: note: Revealed type is "django_cte.cte.CTE[myapp.models.Region]"
-tests/project/examples/recursive_example.py:58: note: Revealed type is "django_cte.cte.CTEQuerySet[myapp.models.Region@AnnotatedWith[TypedDict({'path': Any, 'depth': Any})], myapp.models.Region@AnnotatedWith[TypedDict({'path': Any, 'depth': Any})]]"
+tests/project/examples/recursive_example.py:47: note: Revealed type is "django_cte.cte.CTE[django.db.models.query.QuerySet[myapp.models.Region, TypedDict('examples.recursive_example.RegionInfo', {'name': builtins.str})]]"
+tests/project/examples/recursive_example.py:58: note: Revealed type is "django.db.models.query.QuerySet[myapp.models.Region@AnnotatedWith[TypedDict({'path': Any, 'depth': Any})], myapp.models.Region@AnnotatedWith[TypedDict({'path': Any, 'depth': Any})]]"
 tests/project/examples/recursive_example.py:62: note: Revealed type is "builtins.str"
 tests/project/examples/recursive_example.py:65: note: Revealed type is "builtins.str"
