@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-cte-stubs"
-version = "1.0.1"
+version = "1.1.0"
 description = "Mypy stubs for Django CTE"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -44,6 +44,17 @@ Homepage = "https://github.com/moranabadie/django-cte-stubs"
 Release-notes = "https://github.com/moranabadie/django-cte-stubs/releases"
 
 [tool.hatch]
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple/"
+default = true
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.31.0",
+    "twine>=6.1.0",
+]
 
 [tool.hatch.build.targets.sdist]
 include = [
@@ -111,7 +122,7 @@ plugins = [
 [tool.django-stubs]
 django_settings_module = "project.settings"
 
-[[tool.uv.index]]
-name = "pypi"
-url = "https://pypi.org/simple/"
-default = true
+[tool.basedpyright]
+pythonVersion = "3.9"
+reportExplicitAny = false
+reportAny = false

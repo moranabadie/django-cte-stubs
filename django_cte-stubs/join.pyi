@@ -1,9 +1,13 @@
 from typing import Literal
 
 from django.db.backends.base.base import BaseDatabaseWrapper
-from django.db.models.sql.compiler import SQLCompiler, _AsSqlType
+from django.db.models.sql.compiler import SQLCompiler
 from django.db.models.sql.where import WhereNode
-from typing_extensions import Self
+from typing_extensions import Self, TypeAlias, override
+
+_Param: TypeAlias = str | int
+_Params: TypeAlias = list[_Param] | tuple[_Param, ...]
+_AsSqlType: TypeAlias = tuple[str, _Params]
 
 class QJoin:
     filtered_relation: None
@@ -25,7 +29,9 @@ class QJoin:
     ) -> None: ...
     @property
     def identity(self) -> type[QJoin]: ...
+    @override
     def __hash__(self) -> int: ...
+    @override
     def __eq__(self, other: object) -> bool: ...
     def equals(self, other: object) -> bool: ...
     def as_sql(self, compiler: SQLCompiler, connection: BaseDatabaseWrapper) -> _AsSqlType: ...
@@ -34,4 +40,4 @@ class QJoin:
     class join_field:  # noqa: N801
         class related_model:  # noqa: N801
             class _meta:  # noqa: N801
-                local_concrete_fields: tuple
+                local_concrete_fields: tuple  # pyright: ignore[reportMissingTypeArgument]

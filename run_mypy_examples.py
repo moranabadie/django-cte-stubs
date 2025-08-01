@@ -71,6 +71,22 @@ def run_mypy(example_file: str) -> bool:
     return compare_output(example_file, result.stdout)
 
 
+def run_based_pytest() -> bool:
+    """Run basedpyright on the django_cte-stubs/ directory."""
+    print("Running basedpyright on django_cte-stubs/ ...")
+    result = subprocess.run(  # noqa: S603
+        ["basedpyright", "django_cte-stubs/"],  # noqa: S607
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    print(result.stdout)
+    if result.returncode != 0:
+        print(result.stderr)
+        return False
+    return True
+
+
 if __name__ == "__main__":
     import argparse
 
@@ -78,6 +94,8 @@ if __name__ == "__main__":
     parser.add_argument("--file", type=str, help="Run mypy only on the given example file (path relative to project root).")
     args = parser.parse_args()
 
+    if not run_based_pytest():
+        sys.exit(1)
     run_install()
     all_ok = True
 
