@@ -1,0 +1,5 @@
+tests/project/examples/join.py:9: note: Revealed type is "django_cte.cte.CTE[django.db.models.query.QuerySet[myapp.models.Order@AnnotatedWith[TypedDict({'total': Any})], builtins.dict[builtins.str, Any]]]"
+tests/project/examples/join.py:11: note: Revealed type is "django.db.models.query.QuerySet[myapp.models.Order, myapp.models.Order]"
+tests/project/examples/join.py:12: note: Revealed type is "django.db.models.query.QuerySet[myapp.models.Order@AnnotatedWith[TypedDict({'region_total': Any})], myapp.models.Order@AnnotatedWith[TypedDict({'region_total': Any})]]"
+tests/project/examples/join.py:18: note: Revealed type is "django.db.models.query.QuerySet[myapp.models.Order@AnnotatedWith[TypedDict({'region_total': Any})], myapp.models.Order@AnnotatedWith[TypedDict({'region_total': Any})]]"
+tests/project/examples/join.py:21: note: Revealed type is "Any"

@@ -1,5 +1,7 @@
 """Some models to test with."""
 
+from __future__ import annotations
+
 from django.db import models
 
 

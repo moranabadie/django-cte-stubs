@@ -1,0 +1,3 @@
+tests/project/examples/raw.py:38: note: Revealed type is "django.db.models.query.QuerySet[examples.raw.RawCTE, examples.raw.RawCTE]"
+tests/project/examples/raw.py:46: note: Revealed type is "examples.raw.RawCTE@AnnotatedWith[TypedDict({'avg_order': Any})]"
+tests/project/examples/raw.py:50: note: Revealed type is "builtins.int"

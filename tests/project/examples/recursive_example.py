@@ -17,7 +17,7 @@ class RegionInfo(TypedDict):
     name: str
 
 
-def make_regions_cte(cte: CTE[Region]) -> "_QuerySet[Region, RegionInfo]":
+def make_regions_cte(cte: CTE["_QuerySet[Region, RegionInfo]"]) -> "_QuerySet[Region, RegionInfo]":
     """Copy pasted from the documentation."""
     return (
         Region.objects.filter(parent__isnull=True)
