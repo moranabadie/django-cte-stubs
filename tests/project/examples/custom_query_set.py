@@ -7,6 +7,7 @@ Thank you https://github.com/karolyi.
 from __future__ import annotations
 
 from functools import cached_property
+from typing import TYPE_CHECKING
 
 from django.db.models import QuerySet
 from django_cte import CTE, with_cte
@@ -42,3 +43,23 @@ class CategoryQuerySet(QuerySet[Region]):
 
     def with_parents(self) -> Self:
         return self.all()
+
+
+class RegionQuerySet(QuerySet[Region]):
+    def _get_parents_cte(self, cte_in: CTE[RegionQuerySet]) -> Self:
+        # The 'anchor' part is basically self, no need for an extra
+        # `pk__in` filter
+        qs_pk = Region.objects.only("pk")
+        return self.only("parent").union(
+            cte_in.join(model_or_queryset=qs_pk, pk=cte_in.col.parent_id).only("parent"),
+        )
+
+    @cached_property
+    def bulk_parents(self) -> dict[int, Region]:
+        if TYPE_CHECKING:
+            cte_r = CTE[RegionQuerySet].recursive
+        else:
+            cte_r = CTE.recursive
+        cte = cte_r(make_cte_queryset=self._get_parents_cte)
+        categories = with_cte(cte, select=cte.join(model_or_queryset=Region, pk=cte.col.parent_id))
+        return categories.distinct().in_bulk()

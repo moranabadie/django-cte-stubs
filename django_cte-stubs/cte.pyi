@@ -1,21 +1,20 @@
 from typing import Any, Callable, Generic, Literal, TypeVar, overload
 
 from django.db.models import Manager, Model
-from django.db.models.query import QuerySet, _QuerySet
+from django.db.models.query import QuerySet
 from django.db.models.sql import Query
 from mypy.nodes import Expression
-from typing_extensions import Self
+from typing_extensions import Self, override
 
 from .meta import CTEColumns
 from .query import CTEQuery
 
 _T_co = TypeVar("_T_co", bound=Model, covariant=True)
 _T2_co = TypeVar("_T2_co", bound=Model, covariant=True)
-_Row_co = TypeVar("_Row_co", covariant=True)
-_Q_co = TypeVar("_Q_co", bound=_QuerySet, covariant=True)
-_SelectT = TypeVar("_SelectT", bound=Model | QuerySet | CTE)
-_QuerySet_Var = TypeVar("_QuerySet_Var", bound=QuerySet)
-_QuerySet2_Var = TypeVar("_QuerySet2_Var", bound=QuerySet)
+_Q_co = TypeVar("_Q_co", bound=QuerySet[Model, Any], covariant=True)
+_QuerySet_Var = TypeVar("_QuerySet_Var", bound=QuerySet[Model, Any])
+_SelectT = TypeVar("_SelectT", bound=Model | QuerySet[Model, Any] | CTE[QuerySet[Model, Any]])
+_QuerySet2_Var = TypeVar("_QuerySet2_Var", bound=QuerySet[Model, Any])
 
 def with_cte(*ctes: CTE[Any], select: _SelectT) -> _SelectT: ...
 
@@ -31,7 +30,7 @@ class CTE(Generic[_QuerySet_Var]):
     @classmethod
     def recursive(
         cls,
-        make_cte_queryset: Callable[[Self], _QuerySet[_T2_co, _Row_co]],
+        make_cte_queryset: Callable[[Self], QuerySet[Model, Any]],
         name: str = ...,
         materialized: bool = ...,
     ) -> Self: ...
@@ -71,6 +70,7 @@ class CTEQuerySet(QuerySet[_T_co]):
         hints: dict[str, Model] | None = ...,
     ) -> None: ...
     @classmethod
+    @override
     def as_manager(cls) -> CTEManager[_T_co]: ...
 
 class ManagedCTEQuerySet(CTEQuerySet[_T_co], Generic[_T_co, _Q_co]):
@@ -82,8 +82,10 @@ class ManagedCTEQuerySet(CTEQuerySet[_T_co], Generic[_T_co, _Q_co]):
         hints: dict[str, Model] | None = ...,
     ) -> None: ...
     @classmethod
+    @override
     def as_manager(cls) -> CTEManager[_T_co]: ...
 
 class CTEManager(Manager[_T_co]):
     @classmethod
-    def from_queryset(cls, queryset_class: type[_QuerySet[_T_co, _T_co]], class_name: str | None = ...) -> type[Self]: ...
+    @override
+    def from_queryset(cls, queryset_class: type[QuerySet[_T_co, _T_co]], class_name: str | None = ...) -> type[Self]: ...
