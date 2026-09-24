@@ -1,11 +1,11 @@
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, TypeAlias
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.models import Field, Model, QuerySet
 from django.db.models.expressions import Expression
 from django.db.models.sql.compiler import SQLCompiler
-from typing_extensions import Self, TypeAlias, override
+from typing_extensions import Self, override
 
 from .cte import CTE
 

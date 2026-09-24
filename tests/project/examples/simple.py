@@ -1,7 +1,5 @@
 """Some simple checks."""
 
-from typing import reveal_type
-
 import django
 from django.db.models import Sum
 from django_cte.cte import CTE, with_cte

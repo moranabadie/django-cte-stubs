@@ -21,24 +21,24 @@ class CategoryQuerySet(QuerySet[Region]):
             model_or_queryset=Region.objects.only("pk"),
             pk=cte_in.col.parent_id,
         ).only("parent")
-        reveal_type(join_answer)  # noqa: F821
+        reveal_type(join_answer)
         answer = self.only("parent").union(join_answer)
-        reveal_type(answer)  # noqa: F821
+        reveal_type(answer)
         return answer
 
     @cached_property
     def bulk_parents(self) -> dict[int, Region]:
         cte = CTE.recursive(make_cte_queryset=self._get_parents_cte)
-        reveal_type(cte)  # noqa: F821
+        reveal_type(cte)
 
         _with_typing: CTE[CategoryQuerySet] = CTE.recursive(make_cte_queryset=self._get_parents_cte)
 
-        reveal_type(cte.join(model_or_queryset=Region, pk=cte.col.parent_id))  # noqa: F821
+        reveal_type(cte.join(model_or_queryset=Region, pk=cte.col.parent_id))
 
         categories = with_cte(cte, select=cte.join(model_or_queryset=Region, pk=cte.col.parent_id))
-        reveal_type(categories)  # noqa: F821
+        reveal_type(categories)
         answer = categories.distinct().in_bulk()
-        reveal_type(answer)  # noqa: F821
+        reveal_type(answer)
         return answer
 
     def with_parents(self) -> Self:

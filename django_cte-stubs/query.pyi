@@ -1,4 +1,5 @@
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any, TypeAlias
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.models import Model, QuerySet
@@ -8,7 +9,7 @@ from django.db.models.sql.compiler import (
 )
 from django.db.models.sql.where import WhereNode
 from django_cte.jitmixin import JITMixin
-from typing_extensions import TypeAlias, override
+from typing_extensions import override
 
 from .cte import CTE
 

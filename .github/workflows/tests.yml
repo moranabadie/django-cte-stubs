@@ -1,0 +1,40 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.13"]
+        django-cte-version: ["2.*", "3.*", "4.*"]
+    env:
+      # Keep `uv run` from re-syncing django-cte back to the locked version
+      UV_NO_SYNC: "1"
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Pin django-cte to ${{ matrix.django-cte-version }}
+        run: uv pip install "django-cte==${{ matrix.django-cte-version }}"
+
+      - name: Run stub tests against django-cte ${{ matrix.django-cte-version }}
+        run: uv run python run_mypy_examples.py
+
+      - name: Check stubs against django-cte ${{ matrix.django-cte-version }} runtime
+        env:
+          PYTHONPATH: tests/project:.
+          DJANGO_SETTINGS_MODULE: project.settings
+        run: uv run python -m mypy.stubtest django_cte --ignore-missing-stub --allowlist stubtest_allowlist.txt --ignore-unused-allowlist

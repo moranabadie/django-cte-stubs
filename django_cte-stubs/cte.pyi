@@ -1,4 +1,5 @@
-from typing import Any, Callable, Generic, Literal, TypeVar, overload
+from collections.abc import Callable
+from typing import Any, Generic, Literal, TypeVar, overload
 
 from django.db.models import Manager, Model
 from django.db.models.query import QuerySet

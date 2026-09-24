@@ -1,7 +1,5 @@
 """Raw sql."""
 
-from typing import TypedDict
-
 from django.db.models import IntegerField, QuerySet, TextField
 from django_cte.cte import CTE, with_cte
 from django_cte.raw import RawCteSqlModel, raw_cte_sql
@@ -13,12 +11,6 @@ class RawCTE(RawCteSqlModel):
 
     region_id = TextField()
     avg_order = IntegerField()
-
-
-class Annotations(TypedDict):
-    """The annotations."""
-
-    avg_order: int
 
 
 cte_sql: QuerySet[RawCTE] = raw_cte_sql(
@@ -35,7 +27,7 @@ cte_sql: QuerySet[RawCTE] = raw_cte_sql(
     },
 )
 
-reveal_type(cte_sql)  # noqa: F821
+reveal_type(cte_sql)
 
 
 cte = CTE(cte_sql)
@@ -43,8 +35,16 @@ moon_avg = with_cte(cte, select=cte.join(Region, name=cte.col.region_id).annotat
 
 
 annotated_raw = moon_avg.get()
-reveal_type(annotated_raw)  # noqa: F821
-wrong_avg_order: str = annotated_raw.avg_order  # type: ignore[assignment]
+reveal_type(annotated_raw)
 
 ok_avg_order: int = annotated_raw.avg_order
-reveal_type(ok_avg_order)  # noqa: F821
+reveal_type(ok_avg_order)
+
+# The declared model flows through the CTE
+raw_row = cte.queryset().get()
+reveal_type(raw_row.avg_order)
+wrong_avg_order: str = raw_row.avg_order  # type: ignore[assignment]
+
+# Without annotation, the model defaults to RawCteSqlModel
+untyped_cte_sql = raw_cte_sql("SELECT 1 AS one", [], {"one": IntegerField()})
+reveal_type(untyped_cte_sql)

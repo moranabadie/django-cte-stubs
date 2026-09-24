@@ -1,6 +1,6 @@
 tests/project/examples/custom_query_set.py:24: note: Revealed type is "django.db.models.query.QuerySet[myapp.models.Region, myapp.models.Region]"
-tests/project/examples/custom_query_set.py:26: note: Revealed type is "Self`0"
+tests/project/examples/custom_query_set.py:26: note: Revealed type is "Self"
 tests/project/examples/custom_query_set.py:32: note: Revealed type is "django_cte.cte.CTE[examples.custom_query_set.CategoryQuerySet]"
 tests/project/examples/custom_query_set.py:36: note: Revealed type is "django.db.models.query.QuerySet[myapp.models.Region, myapp.models.Region]"
 tests/project/examples/custom_query_set.py:39: note: Revealed type is "django.db.models.query.QuerySet[myapp.models.Region, myapp.models.Region]"
-tests/project/examples/custom_query_set.py:41: note: Revealed type is "builtins.dict[Any, myapp.models.Region]"
+tests/project/examples/custom_query_set.py:41: note: Revealed type is "dict[Any, myapp.models.Region]"
