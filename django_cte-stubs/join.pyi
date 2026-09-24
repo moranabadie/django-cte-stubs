@@ -1,9 +1,9 @@
-from typing import Literal
+from typing import Literal, TypeAlias
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.models.sql.compiler import SQLCompiler
 from django.db.models.sql.where import WhereNode
-from typing_extensions import Self, TypeAlias, override
+from typing_extensions import Self, override
 
 _Param: TypeAlias = str | int
 _Params: TypeAlias = list[_Param] | tuple[_Param, ...]

@@ -1,6 +1,6 @@
 """An example with recursion."""
 
-from typing import TYPE_CHECKING, TypedDict, reveal_type
+from typing import TYPE_CHECKING, TypedDict
 
 from django.db.models import F, IntegerField, TextField, Value
 from django.db.models.functions import Concat

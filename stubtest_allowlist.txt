@@ -1,0 +1,21 @@
+# Known differences between the stubs and the django-cte runtime.
+# Run with --ignore-unused-allowlist: some entries only apply to some django-cte versions.
+
+# Stub-only helpers, not present at runtime
+django_cte.cte.ManagedCTEQuerySet
+django_cte.raw.RawCteSqlModel
+django_cte.query.QUERY_TYPES
+django_cte.query.COMPILER_TYPES
+
+# CTEQuery is a JIT mixin at runtime; the stub types it as a Query subclass
+django_cte.query.CTEQuery.__init__
+
+# Parameter name kept identical to django-stubs' Expression.relabeled_clone
+django_cte.meta.CTEColumn.relabeled_clone
+
+# Private; parameter renamed from "name" to "column" in django-cte 4.x
+django_cte.cte.CTE._resolve_ref
+
+# @warnings.deprecated wraps __init_subclass__ as (*args, **kwargs) on recent Python patch releases
+django_cte.cte.CTEQuerySet.__init_subclass__
+django_cte.cte.CTEManager.__init_subclass__

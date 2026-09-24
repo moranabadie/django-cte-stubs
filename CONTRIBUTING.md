@@ -10,7 +10,7 @@ To start developing for `django-cte-stubs`, you'll need to set up a local develo
 
 1. Fork the repository on GitHub.
 2. Clone your fork locally
-3. make sure you have a virtualenv with python >= 3.9 
+3. make sure you have a virtualenv with python >= 3.10 
 4. Install required dependencies (preferably in a virtual environment): `uv sync --all-groups`
 
 #### 2. Test your environment

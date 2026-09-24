@@ -31,9 +31,9 @@ def make_root_mapping(rootmap: CTE[QuerySet[Region, RootMapping]]) -> QuerySet[R
 
 
 rootmap = CTE.recursive(make_root_mapping, name="rootmap")
-reveal_type(rootmap)  # noqa: F821
+reveal_type(rootmap)
 
-reveal_type(rootmap.join(Order, region_id=rootmap.col.name))  # noqa: F821
+reveal_type(rootmap.join(Order, region_id=rootmap.col.name))
 
 totals = CTE(
     rootmap.join(Order, region_id=rootmap.col.name)
@@ -47,7 +47,7 @@ totals = CTE(
     name="totals",
 )
 
-reveal_type(totals)  # noqa: F821
+reveal_type(totals)
 
 root_regions = with_cte(
     rootmap,
@@ -60,9 +60,9 @@ root_regions = with_cte(
     ),
 )
 
-reveal_type(root_regions)  # noqa: F821
+reveal_type(root_regions)
 
-reveal_type(root_regions.get().orders_count)  # noqa: F821
-reveal_type(root_regions.get().region_total)  # noqa: F821
+reveal_type(root_regions.get().orders_count)
+reveal_type(root_regions.get().region_total)
 
 _ = root_regions.get().not_region_total  # type: ignore[attr-defined]
