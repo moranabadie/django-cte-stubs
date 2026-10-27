@@ -1,17 +1,15 @@
 from collections.abc import Mapping
-from typing import Any, TypeAlias
+from typing import Any
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.models import Field, Model, QuerySet
 from django.db.models.expressions import Expression
-from django.db.models.sql.compiler import SQLCompiler
+
+# Reuse django-stubs' alias so overrides match the installed version (list | tuple in 5.x, tuple in 6.x)
+from django.db.models.sql.compiler import SQLCompiler, _AsSqlType  # pyright: ignore[reportPrivateUsage]
 from typing_extensions import Self, override
 
 from .cte import CTE
-
-_Param: TypeAlias = str | int
-_Params: TypeAlias = list[_Param] | tuple[_Param, ...]
-_AsSqlType: TypeAlias = tuple[str, _Params]
 
 class CTEColumns:
     def __init__(self, cte: CTE[QuerySet[Model, Any]]) -> None: ...

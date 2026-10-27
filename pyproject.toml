@@ -18,7 +18,7 @@ maintainers = [
 requires-python = ">=3.10"
 dependencies = [
     "mypy==1.*",
-    "django-stubs==5.*",
+    "django-stubs>=5,<7",
     "django-cte>=2,<6"
 ]
 classifiers = [
@@ -51,6 +51,7 @@ default = true
 [dependency-groups]
 dev = [
     "basedpyright>=1.31.0",
+    "ruff>=0.17.3",
     "twine>=6.1.0",
 ]
 
@@ -74,6 +75,8 @@ lint.ignore = [
     "D203",
     "D212",
     "ANN401",
+    "COM812",
+    "CPY001",
 ]
 line-length = 124
 target-version = "py310"
@@ -85,6 +88,7 @@ target-version = "py310"
 ]
 "**/manage.py" = [
     "INP001",
+    "PLC0415",
 ]
 "**/*.pyi" = [
     "FBT001",
@@ -99,6 +103,8 @@ target-version = "py310"
 ]
 "run_mypy_examples.py" = [
     "T201",
+    "S603",
+    "S607",
 ]
 
 [tool.mypy]

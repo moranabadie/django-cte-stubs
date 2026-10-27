@@ -6,6 +6,33 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Ruff format
+        run: uv run ruff format --check .
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Mypy
+        env:
+          PYTHONPATH: tests/project
+        run: uv run mypy .
+
+      - name: Basedpyright
+        run: uv run basedpyright django_cte-stubs
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -13,6 +40,7 @@ jobs:
       matrix:
         python-version: ["3.10", "3.13"]
         django-cte-version: ["2.*", "3.*", "4.*", "5.*"]
+        django-stubs-version: ["5.*", "6.*"]
     env:
       # Keep `uv run` from re-syncing django-cte back to the locked version
       UV_NO_SYNC: "1"
@@ -27,8 +55,8 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-groups
 
-      - name: Pin django-cte to ${{ matrix.django-cte-version }}
-        run: uv pip install "django-cte==${{ matrix.django-cte-version }}"
+      - name: Pin django-cte ${{ matrix.django-cte-version }} and django-stubs ${{ matrix.django-stubs-version }}
+        run: uv pip install "django-cte==${{ matrix.django-cte-version }}" "django-stubs==${{ matrix.django-stubs-version }}"
 
       - name: Run stub tests against django-cte ${{ matrix.django-cte-version }}
         run: uv run python run_mypy_examples.py

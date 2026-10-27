@@ -40,6 +40,7 @@ Before submitting a pull request, ensure that all tests pass:
 - Make sure dependencies in [requirements.in](tests%2Frequirements.in) are installed
 - Call ` PYTHONPATH=tests/project mypy .`
 - Create your own test (for the feature or the bug) in [project](tests%2Fproject)
+- If a revealed type differs between django-stubs majors, add a `<example>.django-stubs-<major>.txt` next to `<example>.txt`; `run_mypy_examples.py` picks it when that major is installed
 
 ### Making Changes
 

@@ -1,0 +1,4 @@
+tests/project/examples/simple.py:18: note: Revealed type is "django_cte.cte.CTE[django.db.models.query.QuerySet[myapp.models.Order@AnnotatedWith[TypedDict({'total': Any})], TypedDict({'region_id': str, 'total': Any})]]"
+tests/project/examples/simple.py:28: note: Revealed type is "django.db.models.query.QuerySet[myapp.models.Order@AnnotatedWith[TypedDict({'region_total': Any})], myapp.models.Order@AnnotatedWith[TypedDict({'region_total': Any})]]"
+tests/project/examples/simple.py:32: note: Revealed type is "myapp.models.Order"
+tests/project/examples/simple.py:36: note: Revealed type is "int"
