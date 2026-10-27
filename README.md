@@ -9,7 +9,7 @@ enabling static type checking and improved IDE experiences for Django developers
 - Better type hinting and autocompletions in supported IDEs.
 - Compatible with Python 3.10 and above.
 - Compatible with django-stubs 5.* and 6.*
-- Compatible with mypy==1.*
+- Compatible with mypy 1.* and 2.*
 - Compatible with django-cte 2.*, 3.*, 4.* and 5.*.
 
 ## Installation
