@@ -1,21 +1,17 @@
 from collections.abc import Callable
-from typing import Any, TypeAlias
+from typing import Any
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.models import Model, QuerySet
 from django.db.models.sql import Query
-from django.db.models.sql.compiler import (
-    SQLUpdateCompiler,
-)
+
+# Reuse django-stubs' alias so overrides match the installed version (list | tuple in 5.x, tuple in 6.x)
+from django.db.models.sql.compiler import SQLUpdateCompiler, _AsSqlType  # pyright: ignore[reportPrivateUsage]
 from django.db.models.sql.where import WhereNode
 from django_cte.jitmixin import JITMixin
 from typing_extensions import override
 
 from .cte import CTE
-
-_Param: TypeAlias = str | int
-_Params: TypeAlias = list[_Param] | tuple[_Param, ...]
-_AsSqlType: TypeAlias = tuple[str, _Params]
 
 class CTEQuery(Query):
     _jit_mixin_prefix: str

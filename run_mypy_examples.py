@@ -4,6 +4,7 @@ import difflib
 import os
 import subprocess
 import sys
+from importlib.metadata import version
 from pathlib import Path
 
 EXAMPLES: list[str] = [
@@ -19,13 +20,27 @@ EXAMPLES: list[str] = [
 def run_install() -> None:
     """Install the package using uv pip to ensure mypy can find the stubs."""
     print("Installing package with uv pip...")
-    subprocess.run(["uv", "pip", "install", "."], capture_output=True, text=True, check=True)  # noqa: S607,S603
+    subprocess.run(["uv", "pip", "install", "."], capture_output=True, text=True, check=True)
+
+
+def expected_output_file(example_path: Path) -> Path:
+    """
+    Return the expected output file for the installed django-stubs major version.
+
+    django-stubs refines some revealed types between majors (e.g. TypedDict rows for values() in 6.x),
+    so an example can ship a `<name>.django-stubs-<major>.txt` that takes precedence over `<name>.txt`.
+    """
+    major = version("django-stubs").split(".")[0]
+    versioned_file = example_path.with_suffix(f".django-stubs-{major}.txt")
+    if versioned_file.exists():
+        return versioned_file
+    return example_path.with_suffix(".txt")
 
 
 def compare_output(example_file: str, output: str) -> bool:
     """Compare the output of mypy on the example file with the expected output."""
     example_path = Path(example_file)
-    txt_file = example_path.with_suffix(".txt")
+    txt_file = expected_output_file(example_path)
     if not txt_file.exists():
         msg = f"No expected output file found for {example_file} (looked for {txt_file})"
         raise ValueError(msg)
@@ -57,8 +72,8 @@ def run_mypy(example_file: str) -> bool:
     print(f"Running mypy on {example_file}...")
     env = os.environ.copy()
     env["PYTHONPATH"] = "tests/project"
-    result = subprocess.run(  # noqa: S603
-        ["mypy", example_file],  # noqa: S607
+    result = subprocess.run(
+        ["mypy", example_file],
         capture_output=True,
         text=True,
         env=env,
@@ -74,8 +89,8 @@ def run_mypy(example_file: str) -> bool:
 def run_based_pytest() -> bool:
     """Run basedpyright on the django_cte-stubs/ directory."""
     print("Running basedpyright on django_cte-stubs/ ...")
-    result = subprocess.run(  # noqa: S603
-        ["basedpyright", "django_cte-stubs/"],  # noqa: S607
+    result = subprocess.run(
+        ["basedpyright", "django_cte-stubs/"],
         capture_output=True,
         text=True,
         check=False,

@@ -1,13 +1,11 @@
-from typing import Literal, TypeAlias
+from typing import Literal
 
 from django.db.backends.base.base import BaseDatabaseWrapper
-from django.db.models.sql.compiler import SQLCompiler
+
+# Reuse django-stubs' alias so overrides match the installed version (list | tuple in 5.x, tuple in 6.x)
+from django.db.models.sql.compiler import SQLCompiler, _AsSqlType  # pyright: ignore[reportPrivateUsage]
 from django.db.models.sql.where import WhereNode
 from typing_extensions import Self, override
-
-_Param: TypeAlias = str | int
-_Params: TypeAlias = list[_Param] | tuple[_Param, ...]
-_AsSqlType: TypeAlias = tuple[str, _Params]
 
 class QJoin:
     filtered_relation: None
